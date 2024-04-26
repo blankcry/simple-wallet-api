@@ -36,8 +36,12 @@ const startServer = async () => {
 
   try {
     console.log("Initializing database...");
-    const connection = await initDatabase("sqlite::memory:", {
-      dialect: 'sqlite'
+    const connection = await initDatabase(process.env.POSTGRES_URL, {
+      dialect: 'postgres',
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DATABASE,
+      username: process.env.POSTGRES_USER,
+      host: process.env.POSTGRES_HOST
     });
     await connection.authenticate();
     console.log("Database initialized!");
