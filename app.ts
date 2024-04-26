@@ -15,9 +15,7 @@ const {
 
 function setupServer(app: Express) {
   const corsOptions = {
-    origin: process.env.ALLOWED_ORIGINS
-      ? process.env.ALLOWED_ORIGINS.split(", ")
-      : [],
+    origin: "*",
     credentials: true,
   };
 
