@@ -2,10 +2,10 @@ import express, { Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import router from "./router/routes";
-import errorMiddleware from "./middleware/error.mw";
-import { init as initDatabase } from "./db";
-import config from "./config/server";
+import router from "./src/router/routes";
+import errorMiddleware from "./src/middleware/error.mw";
+import { init as initDatabase } from "./src/db";
+import config from "./src/config/server";
 
 dotenv.config();
 
@@ -36,12 +36,8 @@ const startServer = async () => {
 
   try {
     console.log("Initializing database...");
-    const connection = await initDatabase(process.env.POSTGRES_URL, {
-      dialect: 'postgres',
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE,
-      username: process.env.POSTGRES_USER,
-      host: process.env.POSTGRES_HOST
+    const connection = await initDatabase("sqlite::memory:", {
+      dialect: 'sqlite',
     });
     await connection.authenticate();
     console.log("Database initialized!");
