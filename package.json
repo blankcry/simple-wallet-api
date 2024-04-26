@@ -5,8 +5,8 @@
   "main": "app.ts",
   "scripts": {
     "test": "tsc --noEmit --pretty -p ./tsconfig.json",
-    "start": "node dist/app.js",
-    "dev": "tsnd --respawn --files app.ts",
+    "start": "node dist/api/index.js",
+    "dev": "tsnd --respawn --files api/index.ts",
     "build": "tsc -p .",
     "lint": "eslint . --ext .ts"
   },

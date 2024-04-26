@@ -2,10 +2,10 @@ import express, { Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import router from "./src/router/routes";
-import errorMiddleware from "./src/middleware/error.mw";
-import { init as initDatabase } from "./src/db";
-import config from "./src/config/server";
+import router from "./router/routes";
+import errorMiddleware from "./middleware/error.mw";
+import { init as initDatabase } from "./db";
+import config from "./config/server";
 
 dotenv.config();
 
