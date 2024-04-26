@@ -10,11 +10,13 @@ import {
 } from "sequelize";
 import WalletTransaction from "./transaction";
 import Account from "./account";
+import { nominateCurrency } from "../../util";
 
 export interface WalletAttributesI {
   id: number;
   name: string
   exchangeRef: string;
+  denominatedBalance: number;
   balance: number;
   currency: 'USD' | 'NGN';
 }
@@ -22,6 +24,8 @@ export interface WalletAttributesI {
 class Wallet 
   extends Model<InferAttributes<Wallet>, InferCreationAttributes<Wallet>> 
   implements WalletAttributesI {
+  declare denominatedBalance: number;
+
   declare id: CreationOptional<number>;
 
   declare name: string;
@@ -62,9 +66,15 @@ export function init(connection: Sequelize) {
         unique: true,
       },
       balance: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: '0.00',
+      },
+      denominatedBalance: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return nominateCurrency(this.balance);
+        }
       },
       currency: {
         type: DataTypes.STRING,

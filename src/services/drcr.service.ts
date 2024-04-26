@@ -1,7 +1,7 @@
 import { LOCK } from 'sequelize';
 import { getConnection } from '../db';
 import { Wallet, WalletTransaction } from '../db/models';
-import { ServerError, UnprocessableError } from '../error';
+import { ConflictError, ServerError, UnprocessableError } from '../error';
 import { denominateCurrency } from '../util';
 import { TransactionTreatment } from '../interface';
 type TreatmentHandler = {
@@ -32,6 +32,9 @@ class DRCR {
       const balanceBefore = balance;
       transaction.set('balanceBefore', balanceBefore);
       const koboAmount = denominateCurrency(amount);
+      if (koboAmount > balance) {
+        throw new ConflictError('Insufficient Funds.')
+      }
       const balanceAfter = Number(balance) - koboAmount;
       await wallet.set('balance', balanceAfter).save();
       await rowLock.commit();
@@ -60,10 +63,14 @@ class DRCR {
       const { amount } = transaction;
       const { balance } = wallet;
       const koboAmount = denominateCurrency(amount);
+      transaction.set('balanceBefore', balance);
       const balanceAfter = Number(balance) + koboAmount;
       await wallet.set('balance', balanceAfter).save();
       await rowLock.commit();
-      await transaction.set('status', 'success').save();
+      await transaction.set({
+        status: 'success',
+        balanceAfter
+      }).save();
       return transaction;
     } catch (err) {
       await rowLock.rollback();

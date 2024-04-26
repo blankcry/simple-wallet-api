@@ -7,7 +7,7 @@ export default {
       const { id: accountId } = request.account;
       const wallets = await walletService.getAccountWallets(accountId);
 
-      return response.status(201).json({
+      return response.json({
         message: 'Wallets Fetched successfully',
         data: wallets,
       });
