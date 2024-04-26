@@ -1,5 +1,5 @@
 import { Sequelize, Options } from "sequelize";
-import { init as initModels } from "./models";
+import { init as initModels, seed } from "./models";
 
 let _connection: Sequelize | undefined;
 
@@ -11,9 +11,9 @@ export async function init(
 
   initModels(_connection);
 
-  if (process.env.NODE_ENV === "development") {
-    await _connection.sync({ alter: false });
-  }
+  await _connection.sync({ alter: false });
+
+  await seed(_connection);
 
   return _connection;
 }

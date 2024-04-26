@@ -23,15 +23,11 @@ class Transaction
 
   declare reference: string;
 
-  declare currency: 'USD' | 'NGN';
-
   declare treatment: TransactionTreatment;
 
   declare amount: number;
 
   declare status:  CreationOptional<'pending' | 'success' | 'failed'>;
-
-  declare accountId: number;
 
   declare walletId: number;
 
@@ -40,9 +36,6 @@ class Transaction
   // declare readonly updatedAt: string;
 
   public getWallet: BelongsToGetAssociationMixin<Wallet>;
-
-  public getAccount: BelongsToGetAssociationMixin<Account>;
-
 }
 
 export function init(connection: Sequelize) {
@@ -53,10 +46,6 @@ export function init(connection: Sequelize) {
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
-      },
-      accountId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
       },
       walletId: {
         type: DataTypes.INTEGER,
@@ -85,10 +74,6 @@ export function init(connection: Sequelize) {
       },
       treatment: {
         type: DataTypes.ENUM('debit', 'credit'),
-        allowNull: false,
-      },
-      currency: {
-        type: DataTypes.ENUM('USD', 'NGN'),
         allowNull: false,
       },
     },

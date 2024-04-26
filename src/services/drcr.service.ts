@@ -25,10 +25,7 @@ class DRCR {
     try {
       const wallet = await transaction.getWallet({
         transaction: rowLock,
-        lock: {
-          level: LOCK.UPDATE,
-          of: Wallet,
-        }
+        lock: true
       });
       const { amount } = transaction;
       const { balance } = wallet;
@@ -58,10 +55,7 @@ class DRCR {
     try {
       const wallet = await transaction.getWallet({
         transaction: rowLock,
-        lock: {
-          level: LOCK.UPDATE,
-          of: Wallet,
-        }
+        lock: true
       });
       const { amount } = transaction;
       const { balance } = wallet;

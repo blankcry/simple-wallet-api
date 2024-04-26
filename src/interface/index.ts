@@ -7,7 +7,6 @@ export interface TransactionAttributeI {
   reference: string;
   balanceBefore: number;
   balanceAfter: number;
-  accountId: number;
   walletId: number;
   status: 'pending' | 'success' | 'failed';
 }

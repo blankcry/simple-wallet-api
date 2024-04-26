@@ -1,7 +1,6 @@
 import express, { Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import address from "running-at";
 
 import router from "./src/router/routes";
 import errorMiddleware from "./src/middleware/error.mw";
@@ -11,8 +10,7 @@ import config from "./src/config/server";
 dotenv.config();
 
 const {
-  server: { id: serverId, port },
-  api: { route: serverEndpointId },
+  server,
 } = config;
 
 function setupServer(app: Express) {
@@ -38,7 +36,9 @@ const startServer = async () => {
 
   try {
     console.log("Initializing database...");
-    const connection = await initDatabase("sqlite::memory:");
+    const connection = await initDatabase("sqlite::memory:", {
+      dialect: 'sqlite'
+    });
     await connection.authenticate();
     console.log("Database initialized!");
 
@@ -46,10 +46,9 @@ const startServer = async () => {
 
     app.use(errorMiddleware);
 
-    app.listen(port, () => {
+    app.listen(server.port, () => {
       console.log(
-        `Running '${serverId}' on port ${port} at ${address().network
-        }/${serverEndpointId}`
+        `Running '${server.name}' on port ${server.port}`
       );
     })
       .on("close", () => {

@@ -13,14 +13,15 @@ import { Wallet } from "../db/models";
  */
 export const isValidAccount = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    const apiKey = request.headers['x-api-key'];
-    if (!apiKey || !isString(apiKey)) {
+    const secret = request.headers['secret'];
+    console.log('Secret', secret)
+    if (!secret || !isString(secret)) {
       return response.status(400).json({
-        message: 'Please supply a valid api key',
+        message: 'Please supply an account secret.',
       });
     }
 
-    const account = await accountService.findOneViaRef(apiKey);
+    const account = await accountService.findOneViaRef(secret);
     request.account = account;
     return next();
   } catch (err) {
@@ -37,7 +38,7 @@ export const isValidAccount = async (request: Request, response: Response, next:
 export const hasWalletAccess = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { walletId } = request.params
-    if (!walletId || !isNumber(walletId)) {
+    if (!walletId || !Number(walletId)) {
       throw new BadRequestError('Please supply a valid wallet ID.');
     }
     const { id: accountId} = request.account;

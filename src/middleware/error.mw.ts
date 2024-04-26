@@ -15,20 +15,14 @@ export default (
   response: Response,
   next: NextFunction
 ) => {
+  console.log(error)
   if (error instanceof joi.ValidationError) {
     return response.status(400).json({
       status: 'validation-error',
       errors: error.details,
     });
   }
-  if (axios.isAxiosError(error)) {
-    const { response: axiosResponse } = error;
-    const { status, message } = axiosResponse.data;
-    return response.status(axiosResponse.status || 400).json({
-      status: status || 'server-error',
-      message: message || 'An unexpected error occured.',
-    });
-  }
+  
   if (error instanceof sequelize.UniqueConstraintError) {
     return response.status(400).json({
       status: 'validation-error',
@@ -60,13 +54,23 @@ export default (
           status: error.code,
           message: error.message,
         });
+      case 'ConflictError':
+        return response.status(409).json({
+          status: error.code,
+          message: error.message,
+        });
+      case 'BadRequestError':
+        return response.status(400).json({
+          status: error.code,
+          message: error.message,
+        });
       case 'SystemError':
       case 'ServerError':
       default:
-        console.error('Unknown Error', error);
+      
         return response.status(500).json({
-          status: "server-error",
-          message: "An unexpected error occured.",
+          status: error.code,
+          message: error.message,
         });
     }
   }

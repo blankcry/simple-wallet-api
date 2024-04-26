@@ -76,11 +76,6 @@ export function init(connection: Sequelize) {
       sequelize: connection,
       modelName: 'Wallet',
       tableName: 'wallets',
-      defaultScope: {
-        attributes: {
-          exclude: ['id'],
-        },
-      }
     },
   );
 }

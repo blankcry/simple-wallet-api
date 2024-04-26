@@ -6,6 +6,7 @@ import {
   Model,
   Sequelize,
 } from "sequelize";
+import { generateUniqueRef } from "../../util";
 
 export interface AccountAttributesI {
   id: number;
@@ -47,7 +48,7 @@ export function init(connection: Sequelize) {
       secret: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
       },
       type: {
         type: DataTypes.ENUM('savings', 'current'),
