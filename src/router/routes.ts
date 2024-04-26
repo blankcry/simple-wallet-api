@@ -6,9 +6,9 @@ import WalletController from "../controller/WalletController";
 import { postLimit } from "../middleware/limit";
 
 const router = Router();
-router.all('/health', async (req: Request, res: Response, next: NextFunction) => {
+router.all('/', async (req: Request, res: Response, next: NextFunction) => {
   res.json({
-    message: 'API is active',
+    message: 'Simple Wallet API.',
   });
 })
 router.route('/account')
